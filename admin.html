@@ -223,16 +223,24 @@ function draw() {
   const f = fields();
   ctx.drawImage(src, 0, 0, cv.width, cv.height);
   const { x0, y0, x1, y1, t } = box;
-  ctx.fillStyle = "#111"; ctx.fillRect(x0 - 4, y0 - 4, x1 - x0 + 8, y1 - y0 + 8);
-  const ix0 = x0 + t, iy0 = y0 + t, ix1 = x1 - t, iy1 = y1 - t, iw = ix1 - ix0, ih = iy1 - iy0;
-  ctx.fillStyle = "#c9a13b"; ctx.fillRect(ix0 - 2, iy0 - 2, iw + 4, ih + 4);
+  ctx.fillStyle = "#111"; ctx.fillRect(x0 - 7, y0 - 5, x1 - x0 + 14, y1 - y0 + 10);
+  const hh = Math.round((y1 - y0) * 3.6 / 19);   // header bar, same ratio as the printed label
+  const ix0 = x0 + t, iy0 = y0 + hh, ix1 = x1 - t, iy1 = y1 - t, iw = ix1 - ix0, ih = iy1 - iy0;
   ctx.fillStyle = "#fff"; ctx.fillRect(ix0, iy0, iw, ih);
+  const hcy = y0 + hh / 2, hp = (x1 - x0) * .012;
+  ctx.textBaseline = "middle"; ctx.fillStyle = "#fff";
+  ctx.font = `italic bold ${Math.max(7, Math.floor(hh * .72))}px Arial, Helvetica, sans-serif`;
+  ctx.textAlign = "left"; ctx.fillText("UCG", ix0 + hp, hcy);
+  ctx.font = `bold ${Math.max(6, Math.floor(hh * .46))}px Arial, Helvetica, sans-serif`;
+  if ("letterSpacing" in ctx) ctx.letterSpacing = `${Math.max(1, hh * .06)}px`;
+  ctx.textAlign = "right"; ctx.fillText("UNIVERSAL CARD GRADING", ix1 - hp, hcy);
+  if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
   const left = f.lines.length ? f.lines : ["YEAR AND SET", "CARD NAME"];
-  let size = Math.max(8, Math.floor(ih * .175));
+  let size = Math.max(8, Math.floor(ih * .155));
   const font = (s, b) => `${b ? "bold " : ""}${s}px Arial, Helvetica, sans-serif`;
   ctx.font = font(size);
   while (Math.max(...left.map(s => ctx.measureText(s).width)) > iw * .68 && size > 7) { size--; ctx.font = font(size); }
-  const pad = iw * .03, lh = Math.floor(size * 1.12), ty = iy0 + ih * .06;
+  const pad = iw * .03, lh = Math.floor(size * 1.12), ty = iy0 + ih * .04;
   ctx.fillStyle = "#1d1d1f"; ctx.textBaseline = "top";
   ctx.textAlign = "left"; left.forEach((s, i) => ctx.fillText(s, ix0 + pad, ty + i * lh));
   ctx.textAlign = "right"; [f.num || "#", f.gradeName, f.grade, f.cert || "CERT"].forEach((s, i) => ctx.fillText(s, ix1 - pad, ty + i * lh));
