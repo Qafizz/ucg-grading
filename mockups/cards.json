@@ -165,5 +165,17 @@
   "num": "#068",
   "gradeName": "GEM MT",
   "grade": "10"
+ },
+ {
+  "cert": "90000115",
+  "img": "mockups/ucg-90000115.jpg",
+  "lines": [
+   "2022 POKEMON SWSH",
+   "MEWTWO-HOLO",
+   "TRICK OR TRADE"
+  ],
+  "num": "#066",
+  "gradeName": "GEM MT",
+  "grade": "10"
  }
 ]
