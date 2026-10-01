@@ -35,39 +35,18 @@ h2{font:600 1.15rem "Outfit",sans-serif;margin:0 0 12px}
 @media (max-width:1000px){.zoom{transform:scale(2);margin-block:10mm}}
 @media (max-width:600px){.zoom{transform:scale(1.25);margin-block:3mm}}
 
-/* ---------- the label ---------- */
-.lab{width:var(--lw);height:var(--lh);background:#111;padding:1.5mm;position:relative;font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;color:#1d1d1f}
-.lab .face{height:100%;background:#fff;box-shadow:0 0 0 .3mm var(--gold);display:grid;grid-template-columns:1fr auto;column-gap:2mm;padding:.9mm 1.6mm 0;text-transform:uppercase;font-size:2.55mm;line-height:1.14}
+/* ---------- the label: black frame + header bar, white face, holo tab ---------- */
+.lab{width:var(--lw);height:var(--lh);background:#111;padding:0 1.3mm 1.3mm;position:relative;font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;color:#1d1d1f}
+.lab .hd{height:3.6mm;display:flex;align-items:center;justify-content:space-between;padding:0 .9mm}
+.lab .hd b{font:800 italic 2.45mm "Outfit",Arial,sans-serif;letter-spacing:-.05mm;color:#fff}
+.lab .hd span{font:700 1.6mm Arial,sans-serif;letter-spacing:.14mm;color:#fff}
+.lab .face{height:calc(100% - 3.6mm);background:#fff;display:grid;grid-template-columns:1fr auto;column-gap:2mm;padding:.6mm 1.5mm 0;text-transform:uppercase;font-size:2.18mm;line-height:1.12}
 .lab .l,.lab .r{white-space:nowrap;overflow:hidden}
 .lab .r{text-align:right}
-.lab .bc{display:flex;align-items:stretch;height:2.1mm;margin-top:.3mm;width:21mm}
-.lab .bc i{background:#111;display:block}
-.lab .tab{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:12mm;height:3.9mm;display:grid;place-items:center;
-  font:700 2.9mm Arial,Helvetica,sans-serif;letter-spacing:.1mm;color:#24252a;-webkit-text-stroke:.08mm #f5f6fa;border:.12mm solid #96989e;border-bottom:0;
-  background:
-    radial-gradient(circle at 20% 30%,#fff 0 .07mm,transparent .12mm) 0 0/.9mm .7mm,
-    radial-gradient(circle at 65% 70%,#fff 0 .05mm,transparent .1mm) .3mm .2mm/.6mm .55mm,
-    radial-gradient(circle at 40% 50%,#ffd6f0 0 .05mm,transparent .1mm) .1mm .4mm/1.3mm 1.1mm,
-    linear-gradient(115deg,#f4c7d8,#cfe3ff 25%,#d7ffe8 45%,#fff3c4 65%,#e2d0ff 85%),
-    linear-gradient(180deg,#eceef1,#a9acb2);
-  background-blend-mode:screen,screen,multiply}
-
-/* ---------- premium label: black header bar, light panel, gold grade box ---------- */
-.lab2{width:var(--lw);height:var(--lh);background:#111;position:relative;font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;border-radius:.5mm;overflow:hidden}
-.lab2 .hd{position:absolute;left:0;right:0;top:0;height:3.7mm;display:flex;align-items:center;justify-content:space-between;padding:0 2mm}
-.lab2 .hd b{font:800 italic 2.5mm "Outfit",Arial,sans-serif;letter-spacing:-.05mm;color:var(--gold-lt);background:linear-gradient(180deg,#f6dd8b,#c9a13b 60%,#9c7a24);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.lab2 .hd span{font:700 1.62mm Arial,sans-serif;letter-spacing:.14mm;color:#f2f2f4}
-.lab2 .bd{position:absolute;left:1.1mm;right:1.1mm;top:3.7mm;bottom:1.1mm;background:#fbfaf6;box-shadow:0 0 0 .25mm var(--gold);border-radius:.3mm}
-.lab2 .tx{position:absolute;left:1.5mm;top:.75mm;right:16.5mm;font-size:2.02mm;line-height:1.2;color:#1d1d1f;white-space:nowrap;overflow:hidden}
-.lab2 .tx b{font-weight:700}
-.lab2 .bc{position:absolute;left:1.5mm;bottom:.75mm;display:flex;height:1.6mm;width:19mm;overflow:hidden}
-.lab2 .bc i{background:#111;display:block;flex:none}
-.lab2 .ct{position:absolute;right:15.6mm;bottom:.55mm;font-size:1.75mm;letter-spacing:.05mm;color:#1d1d1f}
-.lab2 .gb{position:absolute;right:.8mm;top:.8mm;bottom:.8mm;width:13.4mm;background:#111;border:.25mm solid var(--gold);border-radius:.8mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2mm}
-.lab2 .gb small{font:700 1.3mm Arial,sans-serif;letter-spacing:.16mm;color:var(--gold-lt);text-transform:uppercase}
-.lab2 .gb strong{font:800 6.4mm/1 "Outfit",Arial,sans-serif;background:linear-gradient(180deg,#fbe6a2,#d8ad45 55%,#a07b22);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.lab2 .tab{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:10mm;height:3.1mm;display:grid;place-items:center;
-  font:700 2.25mm Arial,Helvetica,sans-serif;letter-spacing:.1mm;color:#24252a;-webkit-text-stroke:.07mm #f5f6fa;border:.12mm solid #96989e;border-bottom:0;
+.lab .bc{display:flex;align-items:stretch;height:1.7mm;margin-top:.25mm;width:19mm;overflow:hidden}
+.lab .bc i{background:#111;display:block;flex:none}
+.lab .tab{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:10.5mm;height:3.3mm;display:grid;place-items:center;
+  font:700 2.45mm Arial,Helvetica,sans-serif;letter-spacing:.1mm;color:#24252a;-webkit-text-stroke:.07mm #f5f6fa;border:.12mm solid #96989e;border-bottom:0;
   background:
     radial-gradient(circle at 20% 30%,#fff 0 .07mm,transparent .12mm) 0 0/.9mm .7mm,
     radial-gradient(circle at 65% 70%,#fff 0 .05mm,transparent .1mm) .3mm .2mm/.6mm .55mm,
@@ -75,10 +54,6 @@ h2{font:600 1.15rem "Outfit",sans-serif;margin:0 0 12px}
     linear-gradient(115deg,#f4c7d8,#cfe3ff 25%,#d7ffe8 45%,#fff3c4 65%,#e2d0ff 85%),
     linear-gradient(180deg,#eceef1,#a9acb2);
   background-blend-mode:screen,screen,screen,multiply}
-.styles{display:flex;gap:8px}
-.styles label{flex:1;display:flex;gap:6px;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:10px;padding:9px;cursor:pointer;color:var(--ink);font-size:.92rem;margin:0}
-.styles input{width:auto}
-.styles label:has(input:checked){border-color:var(--gold);background:#fff8e3}
 
 /* print sheet */
 .sheet{display:none}
@@ -96,13 +71,9 @@ h2{font:600 1.15rem "Outfit",sans-serif;margin:0 0 12px}
 <main>
   <form class="panel" id="f" autocomplete="off">
     <h2>Card details</h2>
-    <div><label>Label style</label><div class="styles">
-      <label><input type="radio" name="sty" value="premium" checked> Premium</label>
-      <label><input type="radio" name="sty" value="classic"> Classic</label>
-    </div></div>
-    <div><label for="l1">Line 1 · year and set</label><input id="l1" value="2022 Pokemon SWSH"></div>
-    <div><label for="l2">Line 2 · card name</label><input id="l2" value="Mewtwo-Holo"></div>
-    <div><label for="l3">Line 3 · variety</label><input id="l3" value="Trick or Trade"></div>
+    <div><label for="l1">Line 1 · year and set</label><input id="l1" value="2022 POKEMON SWSH"></div>
+    <div><label for="l2">Line 2 · card name</label><input id="l2" value="MEWTWO-HOLO"></div>
+    <div><label for="l3">Line 3 · variety</label><input id="l3" value="TRICK OR TRADE"></div>
     <div class="two">
       <div><label for="num">Card #</label><input id="num" value="#066"></div>
       <div><label for="grade">Grade</label><select id="grade"></select></div>
@@ -112,8 +83,7 @@ h2{font:600 1.15rem "Outfit",sans-serif;margin:0 0 12px}
       <div><label for="qty">Copies</label><input id="qty" type="number" min="1" max="30" value="1"></div>
     </div>
     <button class="btn" type="button" id="print">Print labels</button>
-    <p class="hint">Premium keeps your typing as-is (mixed case). Classic prints in all caps.</p>
-    <p class="hint">In the print window, set <b>Scale: 100%</b> (not "Fit to page") and turn on <b>Background graphics</b>, or the black frame and glitter tab won't print. Cut along the dashed lines.</p>
+    <p class="hint">In the print window, set <b>Scale: 100%</b> (not "Fit to page") and turn on <b>Background graphics</b>, or the black frame, header and glitter tab won't print. Cut along the dashed lines.</p>
     <p class="hint">Size: 63.5 × 19 mm (2.5″ × 0.75″). Measure your slab's label slot; if it's different, tell Claude the size.</p>
   </form>
   <section>
@@ -134,34 +104,21 @@ function bars(seed){
   let a=0;for(const c of String(seed))a=(a*31+c.charCodeAt(0))|0;
   const r=()=>{a=(a*1103515245+12345)&0x7fffffff;return a/0x7fffffff};
   let out="",w=0;
-  while(w<21){const b=[.15,.15,.3,.3,.45][Math.floor(r()*5)],g=[.15,.3,.3,.45][Math.floor(r()*4)];out+=`<i style="width:${b}mm;margin-right:${g}mm"></i>`;w+=b+g}
+  while(w<19){const b=[.15,.15,.3,.3,.45][Math.floor(r()*5)],g=[.15,.3,.3,.45][Math.floor(r()*4)];out+=`<i style="width:${b}mm;margin-right:${g}mm"></i>`;w+=b+g}
   return out;
 }
 function label(){
   const L=[$("l1").value,$("l2").value,$("l3").value].map(s=>s.trim().toUpperCase());
   const g=$("grade").value, cert=$("cert").value.replace(/\D/g,"");
   const R=[$("num").value.trim().toUpperCase(),gName(g),String(+g),cert];
-  return `<div class="lab"><div class="face">
+  return `<div class="lab"><div class="hd"><b>UCG</b><span>UNIVERSAL CARD GRADING</span></div><div class="face">
     <div class="l">${L.map(esc).join("<br>")}<div class="bc">${bars(cert)}</div></div>
     <div class="r">${R.map(esc).join("<br>")}</div></div><div class="tab">UCG</div></div>`;
 }
-const LONG={10:"Gem Mint",9:"Mint",8:"NM-Mint",7:"Near Mint",6:"EX-Mint",5:"Excellent",4:"VG-EX",3:"Very Good",2:"Good",1:"Poor"};
-const gLong=g=>Number.isInteger(+g)?LONG[+g]:LONG[Math.floor(+g)]+"+";
-function premium(){
-  const [l1,l2,l3]=[$("l1").value,$("l2").value,$("l3").value].map(s=>s.trim());
-  const num=$("num").value.trim(), g=$("grade").value, cert=$("cert").value.replace(/\D/g,"");
-  const third=[l3,num].filter(Boolean).join(" - ");
-  return `<div class="lab2"><div class="hd"><b>UCG</b><span>UNIVERSAL CARD GRADING</span></div>
-    <div class="bd"><div class="tx"><b>${esc(l2)}</b><br>${esc(l1)}<br>${esc(third)}</div>
-      <div class="bc">${bars(cert)}</div><div class="ct">${esc(cert)}</div>
-      <div class="gb"><small>${esc(gLong(g))}</small><strong>${esc(String(+g))}</strong></div></div>
-    <div class="tab">UCG</div></div>`;
-}
-const make=()=>document.querySelector("[name=sty]:checked").value==="premium"?premium():label();
 function render(){
-  $("preview").innerHTML=make();
+  $("preview").innerHTML=label();
   const n=Math.max(1,Math.min(30,+$("qty").value||1));
-  $("sheet").innerHTML=Array.from({length:n},()=>`<div class="cut">${make()}</div>`).join("");
+  $("sheet").innerHTML=Array.from({length:n},()=>`<div class="cut">${label()}</div>`).join("");
 }
 $("f").addEventListener("input",render);
 $("print").addEventListener("click",()=>{render();window.print()});
