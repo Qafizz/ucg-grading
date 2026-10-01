@@ -71,6 +71,8 @@ th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vert
 th{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:var(--bg)}
 tr:last-child td{border-bottom:0}
 td img{width:46px;border-radius:5px;display:block}
+td small{color:var(--muted)}
+td select{width:auto;padding:6px 8px;font-size:.88rem}
 .pill{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
 .pill.g{background:#e3f4ea;color:var(--ok)}.pill.p{background:#fff2cf;color:var(--gold-dk)}.pill.b{background:#eceef1;color:var(--muted)}
 </style>
@@ -141,6 +143,14 @@ td img{width:46px;border-radius:5px;display:block}
       <div class="tbl"><table>
         <thead><tr><th></th><th>Cert</th><th>Card</th><th>Grade</th><th>Status</th><th></th></tr></thead>
         <tbody id="rows"><tr><td colspan="6">Loading…</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="list">
+      <h2>Customer submissions</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Ref</th><th>Customer</th><th>Cards</th><th>Tier · total</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="subRows"><tr><td colspan="6">Loading…</td></tr></tbody>
       </table></div>
     </div>
   </section>
@@ -345,7 +355,7 @@ function render(user) {
   $("verifyBox").hidden = !(isAdmin && !user.emailVerified);
   $("dash").hidden = !(isAdmin && user.emailVerified);
   if (isAdmin && !user.emailVerified) $("vEmail").textContent = user.email;
-  if (isAdmin && user.emailVerified) loadList();
+  if (isAdmin && user.emailVerified) { loadList(); loadSubs(); }
 }
 A.onAuthStateChanged(auth, render);
 
@@ -375,6 +385,30 @@ $("rows").addEventListener("click", async e => {
     await F.deleteDoc(F.doc(db, "certs", b.dataset.del)); await F.deleteDoc(F.doc(db, "images", b.dataset.del));
     await loadList();
   } catch (err) { b.textContent = friendly(err); }
+});
+
+// ---------- customer submissions
+const STATUSES = ["pending", "received", "grading", "shipped", "complete", "cancelled"];
+async function loadSubs() {
+  try {
+    const snap = await F.getDocs(F.collection(db, "submissions"));
+    const list = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.created?.seconds || 0) - (a.created?.seconds || 0));
+    $("subRows").innerHTML = list.map(s => `<tr>
+      <td><b>${esc(s.ref)}</b></td>
+      <td>${esc(s.name)}<br><small>${esc(s.email)}${s.phone ? " · " + esc(s.phone) : ""}</small></td>
+      <td>${s.cards.map(c => `${esc(c.desc)}${c.value ? ` <small>($${esc(c.value)})</small>` : ""}`).join("<br>")}${s.notes ? `<br><small>Note: ${esc(s.notes)}</small>` : ""}</td>
+      <td>${esc(s.tier)}<br><small>$${esc(s.total)}</small></td>
+      <td><small>${s.created ? new Date(s.created.seconds * 1000).toLocaleDateString("en-CA") : ""}</small></td>
+      <td><select data-sub="${esc(s.id)}" aria-label="Status">${STATUSES.map(x => `<option${x === s.status ? " selected" : ""}>${x}</option>`).join("")}</select></td></tr>`).join("")
+      || '<tr><td colspan="6">No submissions yet.</td></tr>';
+  } catch (e) { $("subRows").innerHTML = `<tr><td colspan="6">${esc(friendly(e))}</td></tr>`; }
+}
+$("subRows").addEventListener("change", async e => {
+  const sel = e.target.closest("[data-sub]"); if (!sel) return;
+  sel.disabled = true;
+  try { await F.updateDoc(F.doc(db, "submissions", sel.dataset.sub), { status: sel.value }); }
+  catch (err) { alert(friendly(err)); }
+  finally { sel.disabled = false; }
 });
 
 // ---------- publish

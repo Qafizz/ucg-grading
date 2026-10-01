@@ -6,6 +6,9 @@ service cloud.firestore {
         && request.auth.token.email == 'qafizz@qafizz.com'
         && request.auth.token.email_verified == true;
     }
+    function isVerified() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
     // Anyone can look up certs; only the verified admin can add, change or delete them.
     match /certs/{cert} {
       allow read: if true;
@@ -14,6 +17,18 @@ service cloud.firestore {
     match /images/{cert} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+    // Customers create their own submissions and see only theirs; the admin sees and updates all.
+    match /submissions/{id} {
+      allow create: if isVerified()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.status == 'pending'
+        && request.resource.data.cards is list
+        && request.resource.data.cards.size() > 0
+        && request.resource.data.cards.size() <= 200;
+      allow read: if request.auth != null && (resource.data.uid == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin();
     }
     match /{document=**} {
       allow read, write: if false;

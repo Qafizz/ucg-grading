@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My UCG Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --black:#0d0d0e; --gold:#c9a13b; --gold-lt:#e8c766; --gold-dk:#8a6a1c;
+  --ink:#111; --muted:#5d5d63; --line:#e3e3e7; --bg:#f6f6f7; --err:#b3261e; --ok:#137a3e;
+  --display:"Outfit","Segoe UI",sans-serif; --body:"Figtree",system-ui,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body)}
+a{color:inherit}
+.bar{background:var(--black);color:#fff;border-bottom:2px solid var(--gold)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:72px}
+.logo{font:800 italic 1.9rem var(--display);color:var(--gold-lt);text-decoration:none}
+.wrap{max-width:1000px;margin-inline:auto;padding-inline:20px}
+main{padding-block:32px 80px}
+h1,h2{font-family:var(--display);margin:0;letter-spacing:-.01em}
+h1{font-size:2rem}h2{font-size:1.3rem}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;display:grid;gap:14px}
+.auth{max-width:440px;margin:24px auto}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border-radius:12px;padding:4px}
+.tabs button{border:0;background:none;font:600 .95rem var(--body);padding:10px;border-radius:9px;cursor:pointer;color:var(--muted)}
+.tabs button[aria-selected=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:5px}
+input,select,textarea{width:100%;font:500 1rem var(--body);padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 .98rem var(--body);padding:12px 20px;border-radius:12px;border:1px solid var(--black);background:var(--black);color:#fff;cursor:pointer;text-decoration:none}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--black)}
+.btn.light{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn.small{padding:7px 12px;font-size:.86rem;border-radius:9px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.msg{font-size:.92rem;margin:0}.msg.err{color:var(--err);font-weight:600}.msg.ok{color:var(--ok);font-weight:600}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.links{font-size:.88rem;display:flex;gap:16px;flex-wrap:wrap}
+.links button{background:none;border:0;padding:0;font:inherit;color:var(--gold-dk);text-decoration:underline;cursor:pointer}
+.head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.head p{margin:4px 0 0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.cards{display:grid;gap:8px}
+.cardrow{display:grid;grid-template-columns:1fr 130px auto;gap:8px;align-items:center}
+.cardrow button{border:1px solid var(--line);background:#fff;border-radius:9px;width:40px;height:44px;cursor:pointer;font-size:1.1rem;color:var(--muted)}
+@media (max-width:520px){.cardrow{grid-template-columns:1fr 100px auto}}
+.total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:12px}
+.total b{font:600 2rem var(--display);font-variant-numeric:tabular-nums}
+.total span{font-size:.85rem;color:var(--muted)}
+.subs{display:grid;gap:12px}
+.sub{border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:4px}
+.sub .top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.sub b{font-family:var(--display);font-size:1.05rem}
+.sub small{color:var(--muted)}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em;background:#eceef1;color:var(--muted)}
+.pill.received,.pill.grading{background:#fff2cf;color:var(--gold-dk)}
+.pill.shipped,.pill.complete{background:#e3f4ea;color:var(--ok)}
+.empty{color:var(--muted);font-size:.95rem;margin:0}
+</style>
+</head>
+<body>
+<header class="bar"><div class="wrap">
+  <a class="logo" href="./">UCG</a>
+  <div class="row"><span id="who" style="font-size:.9rem;opacity:.8"></span><button class="btn small light" id="signOut" hidden>Sign out</button></div>
+</div></header>
+
+<main class="wrap">
+  <!-- signed out -->
+  <section class="panel auth" id="authBox" hidden>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tIn" aria-selected="true">Sign in</button>
+      <button role="tab" id="tUp" aria-selected="false">Create account</button>
+    </div>
+    <div id="nameRow" hidden><label for="name">Full name</label><input id="name" autocomplete="name"></div>
+    <div><label for="email">Email</label><input id="email" type="email" autocomplete="email"></div>
+    <div><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password"></div>
+    <div id="pw2Row" hidden><label for="pw2">Confirm password</label><input id="pw2" type="password" autocomplete="new-password"></div>
+    <button class="btn" id="go">Sign in</button>
+    <p class="msg" id="authMsg"></p>
+    <div class="links"><button type="button" id="reset">Forgot password</button></div>
+  </section>
+
+  <!-- verify email -->
+  <section class="panel auth" id="verifyBox" hidden>
+    <h1>Check your email</h1>
+    <p class="msg">We sent a verification link to <b id="vEmail"></b>. Open it, then press the button below. Check your spam folder if you don't see it.</p>
+    <div class="row"><button class="btn" id="verified">I've verified my email</button><button class="btn light" id="resend">Send the link again</button></div>
+    <p class="msg" id="verifyMsg"></p>
+  </section>
+
+  <!-- dashboard -->
+  <section id="dash" hidden>
+    <div class="head">
+      <div><h1 id="hello">My account</h1><p>Start a grading submission and track it here.</p></div>
+      <a class="btn small light" id="adminLink" href="admin.html" hidden>Open admin</a>
+    </div>
+    <div class="grid">
+      <form class="panel" id="new" autocomplete="off">
+        <h2>New submission</h2>
+        <div><label for="tier">Service level</label><select id="tier"></select></div>
+        <div>
+          <label>Cards</label>
+          <div class="cards" id="cards"></div>
+          <button type="button" class="btn small light" id="addCard" style="margin-top:8px">+ Add a card</button>
+        </div>
+        <div><label for="phone">Phone (optional)</label><input id="phone" type="tel" autocomplete="tel"></div>
+        <div><label for="notes">Notes (optional)</label><textarea id="notes" rows="2" placeholder="Anything we should know about these cards"></textarea></div>
+        <div class="total"><span id="totNote"></span><b id="tot">$0</b></div>
+        <button class="btn gold" type="submit" id="submit">Submit request</button>
+        <p class="msg" id="subMsg"></p>
+      </form>
+      <section class="panel">
+        <h2>My submissions</h2>
+        <div class="subs" id="subs"><p class="empty">Loading…</p></div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAIL, FIREBASE_SDK } from "./firebase-config.js";
+const $ = id => document.getElementById(id);
+const esc = t => String(t ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = n => "$" + Number(n).toLocaleString("en-CA", { maximumFractionDigits: 2 });
+const say = (id, t, k) => { const m = $(id); m.textContent = t; m.className = "msg" + (k ? " " + k : ""); };
+
+// same tiers as the homepage
+const TIERS = [
+  { n: "Value", p: 22, max: 500, t: "about 45 business days" },
+  { n: "Regular", p: 50, max: 1500, t: "about 20 business days" },
+  { n: "Express", p: 100, max: 2500, t: "about 10 business days" },
+  { n: "Super Express", p: 250, max: 5000, t: "about 5 business days" },
+  { n: "Walk-Through", p: 500, max: 10000, t: "about 2 business days" }
+];
+$("tier").innerHTML = TIERS.map((t, i) => `<option value="${i}"${i === 1 ? " selected" : ""}>${t.n} · ${money(t.p)}/card · up to ${money(t.max)} value</option>`).join("");
+
+// ---------- card rows
+function addRow(desc = "", value = "") {
+  const r = document.createElement("div"); r.className = "cardrow";
+  r.innerHTML = `<input class="cd" placeholder="e.g. 2020 Pokemon Charizard V #050" value="${esc(desc)}" aria-label="Card description">
+    <input class="cv" type="number" min="0" step="1" placeholder="Value $" value="${esc(value)}" aria-label="Declared value in dollars">
+    <button type="button" aria-label="Remove card">×</button>`;
+  r.querySelector("button").addEventListener("click", () => { if ($("cards").children.length > 1) { r.remove(); total(); } });
+  r.addEventListener("input", total);
+  $("cards").append(r);
+}
+const rows = () => [...$("cards").children].map(r => ({ desc: r.querySelector(".cd").value.trim(), value: +r.querySelector(".cv").value || 0 }));
+function total() {
+  const t = TIERS[+$("tier").value], cards = rows().filter(c => c.desc);
+  const ship = cards.length >= 20 ? 0 : 18;
+  $("tot").textContent = money(t.p * cards.length + (cards.length ? ship : 0));
+  $("totNote").textContent = cards.length ? `${cards.length} card${cards.length > 1 ? "s" : ""} × ${money(t.p)} + ${ship ? money(ship) + " return shipping" : "free return shipping"}` : "Add your cards";
+}
+$("addCard").addEventListener("click", () => { addRow(); total(); });
+$("tier").addEventListener("input", total);
+addRow(); total();
+
+// ---------- Firebase
+const { initializeApp } = await import(`${FIREBASE_SDK}/firebase-app.js`);
+const A = await import(`${FIREBASE_SDK}/firebase-auth.js`);
+const F = await import(`${FIREBASE_SDK}/firebase-firestore.js`);
+const app = initializeApp(firebaseConfig);
+const auth = A.getAuth(app), db = F.getFirestore(app);
+const friendly = e => ({
+  "auth/invalid-credential": "Wrong email or password.", "auth/wrong-password": "Wrong email or password.",
+  "auth/user-not-found": "No account with that email. Create one instead.",
+  "auth/email-already-in-use": "There's already an account with that email. Sign in instead.",
+  "auth/weak-password": "Use a password with at least 8 characters.",
+  "auth/too-many-requests": "Too many tries. Wait a few minutes and try again.",
+  "auth/missing-password": "Enter your password.", "auth/invalid-email": "Enter a valid email address.",
+  "auth/operation-not-allowed": "New sign-ups are switched off right now. Contact UCG.",
+  "auth/admin-restricted-operation": "New sign-ups are switched off right now. Contact UCG.",
+  "permission-denied": "That didn't go through. Make sure your email is verified, then try again."
+}[e.code] || e.message);
+
+let mode = "in";
+function setMode(m) {
+  mode = m;
+  $("tIn").setAttribute("aria-selected", m === "in"); $("tUp").setAttribute("aria-selected", m === "up");
+  $("nameRow").hidden = $("pw2Row").hidden = m === "in";
+  $("pw").autocomplete = m === "in" ? "current-password" : "new-password";
+  $("go").textContent = m === "in" ? "Sign in" : "Create account";
+  say("authMsg", "");
+}
+$("tIn").addEventListener("click", () => setMode("in"));
+$("tUp").addEventListener("click", () => setMode("up"));
+if (location.hash === "#signup") setMode("up");
+
+$("go").addEventListener("click", async () => {
+  const email = $("email").value.trim(), pw = $("pw").value;
+  try {
+    if (mode === "in") { say("authMsg", "Signing in…"); await A.signInWithEmailAndPassword(auth, email, pw); return; }
+    const name = $("name").value.trim();
+    if (!name) return say("authMsg", "Enter your name.", "err");
+    if (pw.length < 8) return say("authMsg", "Use a password with at least 8 characters.", "err");
+    if (pw !== $("pw2").value) return say("authMsg", "The two passwords don't match.", "err");
+    say("authMsg", "Creating your account…");
+    const c = await A.createUserWithEmailAndPassword(auth, email, pw);
+    await A.updateProfile(c.user, { displayName: name });
+    await A.sendEmailVerification(c.user);
+    render(c.user);
+  } catch (e) { say("authMsg", friendly(e), "err"); }
+});
+["pw", "pw2"].forEach(id => $(id).addEventListener("keydown", e => { if (e.key === "Enter") $("go").click(); }));
+$("reset").addEventListener("click", async () => {
+  const email = $("email").value.trim();
+  if (!email) return say("authMsg", "Type your email above first, then press Forgot password.", "err");
+  try { await A.sendPasswordResetEmail(auth, email); say("authMsg", "If that email has an account, a reset link is on its way.", "ok"); }
+  catch (e) { say("authMsg", friendly(e), "err"); }
+});
+$("verified").addEventListener("click", async () => {
+  await auth.currentUser.reload(); await auth.currentUser.getIdToken(true);
+  if (auth.currentUser.emailVerified) render(auth.currentUser); else say("verifyMsg", "Not verified yet. Open the link in the email first.", "err");
+});
+$("resend").addEventListener("click", async () => {
+  try { await A.sendEmailVerification(auth.currentUser); say("verifyMsg", "Sent. Check your inbox and spam folder.", "ok"); }
+  catch (e) { say("verifyMsg", friendly(e), "err"); }
+});
+$("signOut").addEventListener("click", () => A.signOut(auth));
+
+function render(user) {
+  $("authBox").hidden = !!user; $("signOut").hidden = !user; $("who").textContent = user ? user.email : "";
+  $("verifyBox").hidden = !(user && !user.emailVerified);
+  $("dash").hidden = !(user && user.emailVerified);
+  if (user && !user.emailVerified) $("vEmail").textContent = user.email;
+  if (user && user.emailVerified) {
+    $("hello").textContent = user.displayName ? `Hi, ${user.displayName.split(" ")[0]}` : "My account";
+    $("adminLink").hidden = user.email.toLowerCase() !== ADMIN_EMAIL;
+    if (location.hash === "#new") $("new").scrollIntoView({ behavior: "smooth" });
+    loadSubs(user);
+  }
+}
+A.onAuthStateChanged(auth, render);
+
+// ---------- submissions
+async function loadSubs(user) {
+  try {
+    const q = F.query(F.collection(db, "submissions"), F.where("uid", "==", user.uid));
+    const snap = await F.getDocs(q);
+    const list = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.created?.seconds || 0) - (a.created?.seconds || 0));
+    $("subs").innerHTML = list.map(s => `<div class="sub">
+      <div class="top"><b>Submission ${esc(s.ref)}</b><span class="pill ${esc(s.status)}">${esc(s.status)}</span></div>
+      <small>${esc(s.tier)} · ${s.cards.length} card${s.cards.length > 1 ? "s" : ""} · est. ${money(s.total)}${s.created ? " · " + new Date(s.created.seconds * 1000).toLocaleDateString("en-CA") : ""}</small>
+      <small>${s.cards.map(c => esc(c.desc)).join(" · ")}</small></div>`).join("") || '<p class="empty">No submissions yet. Fill in the form to start your first one.</p>';
+  } catch (e) { $("subs").innerHTML = `<p class="msg err">${esc(friendly(e))}</p>`; }
+}
+$("new").addEventListener("submit", async e => {
+  e.preventDefault();
+  const user = auth.currentUser, t = TIERS[+$("tier").value];
+  const cards = rows().filter(c => c.desc);
+  if (!cards.length) return say("subMsg", "Add at least one card.", "err");
+  const over = cards.find(c => c.value > t.max);
+  if (over) return say("subMsg", `"${over.desc}" is valued over ${money(t.max)}. Pick a higher service level.`, "err");
+  const ship = cards.length >= 20 ? 0 : 18;
+  const ref = "S" + Date.now().toString(36).toUpperCase().slice(-6);
+  $("submit").disabled = true; say("subMsg", "Sending…");
+  try {
+    await F.addDoc(F.collection(db, "submissions"), {
+      uid: user.uid, email: user.email, name: user.displayName || "", phone: $("phone").value.trim(),
+      notes: $("notes").value.trim(), tier: t.n, pricePerCard: t.p, cards, total: t.p * cards.length + ship,
+      status: "pending", ref, created: F.serverTimestamp()
+    });
+    say("subMsg", `Submission ${ref} received. We'll email you the shipping address and packing slip.`, "ok");
+    $("cards").innerHTML = ""; addRow(); $("notes").value = ""; total();
+    loadSubs(user);
+  } catch (err) { say("subMsg", friendly(err), "err"); }
+  finally { $("submit").disabled = false; }
+});
+</script>
+</body>
+</html>
