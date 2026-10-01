@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>UCG Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --black:#0d0d0e; --gold:#c9a13b; --gold-lt:#e8c766; --gold-dk:#8a6a1c;
+  --ink:#111; --muted:#5d5d63; --line:#e3e3e7; --bg:#f6f6f7; --surface:#fff; --err:#b3261e; --ok:#137a3e;
+  --display:"Outfit","Segoe UI",sans-serif; --body:"Figtree",system-ui,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body)}
+a{color:inherit}
+.bar{background:var(--black);color:#fff;border-bottom:2px solid var(--gold)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
+.logo{font:800 italic 1.7rem var(--display);color:var(--gold-lt);text-decoration:none}
+.logo small{font:500 .8rem var(--body);color:#fff;opacity:.7;font-style:normal;margin-left:10px}
+.wrap{max-width:1180px;margin-inline:auto;padding-inline:20px}
+main{padding-block:32px 80px}
+h1,h2{font-family:var(--display);margin:0;letter-spacing:-.01em}
+h1{font-size:2rem}h2{font-size:1.3rem;margin-bottom:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px}
+.auth{max-width:420px;margin:40px auto;display:grid;gap:14px}
+label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:5px}
+input,select{width:100%;font:500 1rem var(--body);padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+input[type=range]{padding:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 .98rem var(--body);padding:12px 20px;border-radius:12px;border:1px solid var(--black);background:var(--black);color:#fff;cursor:pointer}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--black)}
+.btn.light{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn.small{padding:7px 12px;font-size:.85rem;border-radius:9px}
+.btn.danger{background:#fff;color:var(--err);border-color:var(--err)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.msg{font-size:.92rem;margin:0}.msg.err{color:var(--err);font-weight:600}.msg.ok{color:var(--ok);font-weight:600}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.links{font-size:.88rem;display:flex;gap:16px;flex-wrap:wrap}
+.links button{background:none;border:0;padding:0;font:inherit;color:var(--gold-dk);text-decoration:underline;cursor:pointer}
+
+.editor{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:24px;align-items:start;margin-top:24px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fields .full{grid-column:1/-1}
+.drop{grid-column:1/-1;border:2px dashed var(--line);border-radius:14px;padding:22px;text-align:center;color:var(--muted);cursor:pointer;background:var(--bg)}
+.drop.over{border-color:var(--gold);background:#fff8e3}
+.drop b{color:var(--ink)}
+.adjust{grid-column:1/-1;border-top:1px solid var(--line);padding-top:14px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.adjust summary{grid-column:1/-1}
+details.adj{grid-column:1/-1}
+details.adj summary{cursor:pointer;font-weight:600;font-size:.9rem;color:var(--muted)}
+details.adj .adjust{border:0;padding-top:10px}
+.preview{position:sticky;top:16px}
+.preview canvas{width:100%;height:auto;border-radius:14px;background:#ddd;display:block;box-shadow:0 14px 36px rgba(0,0,0,.15)}
+.preview .empty{aspect-ratio:3/5;border-radius:14px;background:repeating-linear-gradient(45deg,#ececef 0 10px,#f4f4f6 10px 20px);display:grid;place-items:center;color:var(--muted);text-align:center;padding:20px}
+.status{display:flex;gap:16px;flex-wrap:wrap}
+.status label{display:flex;align-items:center;gap:6px;font-size:.95rem;color:var(--ink);font-weight:500;margin:0}
+.status input{width:auto}
+@media (max-width:900px){.editor{grid-template-columns:1fr}.preview{position:static}.adjust{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.fields{grid-template-columns:1fr}}
+
+.list{margin-top:28px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+table{width:100%;border-collapse:collapse;min-width:640px;font-size:.93rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td img{width:46px;border-radius:5px;display:block}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.pill.g{background:#e3f4ea;color:var(--ok)}.pill.p{background:#fff2cf;color:var(--gold-dk)}.pill.b{background:#eceef1;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="bar"><div class="wrap">
+  <a class="logo" href="./">UCG<small>Admin</small></a>
+  <div class="row"><span id="who" style="font-size:.88rem;opacity:.8"></span><button class="btn small light" id="signOut" hidden>Sign out</button></div>
+</div></header>
+
+<main class="wrap">
+  <p class="msg err" id="setupMsg" hidden>The database isn't connected yet. Finish the Firebase setup, then reload this page.</p>
+
+  <!-- sign in -->
+  <section class="panel auth" id="authBox" hidden>
+    <h1>Admin sign in</h1>
+    <div><label for="email">Email</label><input id="email" type="email" autocomplete="username" value="qafizz@qafizz.com"></div>
+    <div><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password"></div>
+    <button class="btn" id="signIn">Sign in</button>
+    <p class="msg" id="authMsg"></p>
+    <div class="links"><button type="button" id="create">First time? Create the admin account</button><button type="button" id="reset">Forgot password</button></div>
+  </section>
+
+  <!-- email verification -->
+  <section class="panel auth" id="verifyBox" hidden>
+    <h1>Verify your email</h1>
+    <p class="msg">We sent a link to <b id="vEmail"></b>. Open it, then come back and press the button below.</p>
+    <div class="row"><button class="btn" id="verified">I've verified it</button><button class="btn light" id="resend">Send the link again</button></div>
+    <p class="msg" id="verifyMsg"></p>
+  </section>
+
+  <p class="msg err" id="denied" hidden>This account isn't the UCG admin. Sign in with the admin email.</p>
+
+  <!-- dashboard -->
+  <section id="dash" hidden>
+    <div class="row" style="justify-content:space-between"><h1>Add a card</h1><a class="btn small light" href="./#gallery" target="_blank" rel="noopener">View gallery</a></div>
+    <div class="editor">
+      <form class="panel fields" id="form" autocomplete="off">
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload slab photo"><b>Upload a slab photo</b><br>Click or drop an image. Front of the slab, label at the top.</div>
+        <input type="file" id="file" accept="image/*" hidden>
+        <div class="full"><label for="l1">Line 1 · year and set</label><input id="l1" placeholder="2022 POKEMON SWSH"></div>
+        <div class="full"><label for="l2">Line 2 · card name</label><input id="l2" placeholder="MEWTWO-HOLO"></div>
+        <div class="full"><label for="l3">Line 3 · variety (optional)</label><input id="l3" placeholder="TRICK OR TRADE"></div>
+        <div><label for="num">Card number</label><input id="num" placeholder="#066"></div>
+        <div><label for="grade">Grade</label><select id="grade"></select></div>
+        <div><label for="cert">Cert number</label><input id="cert" inputmode="numeric"></div>
+        <div><label>Status</label><div class="status">
+          <label><input type="radio" name="st" value="graded" checked> Graded by UCG</label>
+          <label><input type="radio" name="st" value="preview"> Label preview</label>
+        </div></div>
+        <details class="adj"><summary>Label position (if it doesn't line up)</summary>
+          <div class="adjust">
+            <div><label for="bx0">Left %</label><input type="range" id="bx0" min="0" max="40" step=".1"></div>
+            <div><label for="bx1">Right %</label><input type="range" id="bx1" min="60" max="100" step=".1"></div>
+            <div><label for="by0">Top %</label><input type="range" id="by0" min="0" max="20" step=".1"></div>
+            <div><label for="by1">Bottom %</label><input type="range" id="by1" min="8" max="35" step=".1"></div>
+            <div><label for="bt">Frame px</label><input type="range" id="bt" min="2" max="40" step="1"></div>
+            <div class="full" style="grid-column:1/-1"><button type="button" class="btn small light" id="auto">Auto-detect again</button></div>
+          </div>
+        </details>
+        <div class="full row"><button class="btn gold" type="submit" id="save" disabled>Publish card</button><p class="msg" id="saveMsg"></p></div>
+      </form>
+      <div class="preview"><div class="empty" id="empty">The new label shows here after you upload a photo.</div><canvas id="cv" hidden></canvas></div>
+    </div>
+
+    <div class="list">
+      <h2>All certs</h2>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>Cert</th><th>Card</th><th>Grade</th><th>Status</th><th></th></tr></thead>
+        <tbody id="rows"><tr><td colspan="6">Loading…</td></tr></tbody>
+      </table></div>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAIL, FIREBASE_SDK } from "./firebase-config.js";
+const $ = id => document.getElementById(id);
+const esc = t => String(t ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// ---------- grades
+const NAMES = {10:"GEM MT",9:"MINT",8:"NM-MT",7:"NM",6:"EX-MT",5:"EX",4:"VG-EX",3:"VG",2:"GOOD",1:"PR"};
+const GRADES = [];
+for (let g = 10; g >= 1; g -= .5) GRADES.push(g);
+$("grade").innerHTML = GRADES.map(g => `<option value="${g}">${g} · ${Number.isInteger(g) ? NAMES[g] : NAMES[Math.floor(g)] + "+"}</option>`).join("");
+const gradeName = g => Number.isInteger(+g) ? NAMES[+g] : NAMES[Math.floor(+g)] + "+";
+
+// ---------- label drawing (same look as relabel.py)
+let src = null, box = null;
+const cv = $("cv"), ctx = cv.getContext("2d", { willReadFrequently: true });
+const isRed = (r, g, b) => r > 160 && g < 90 && b < 90 && r - g > 90;
+
+function detect() {
+  const w = cv.width, h = cv.height, H = Math.floor(h * .25);
+  ctx.drawImage(src, 0, 0, w, h);
+  const d = ctx.getImageData(0, 0, w, H).data;
+  let x0 = w, x1 = -1, y0 = H, y1 = -1;
+  for (let y = 0; y < H; y++) for (let x = 0; x < w; x += 2) {
+    const i = (y * w + x) * 4;
+    if (isRed(d[i], d[i + 1], d[i + 2])) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  }
+  if (x1 < 0 || x1 - x0 < w * .4) return { x0: w * .07, x1: w * .93, y0: h * .035, y1: h * .19, t: Math.max(3, Math.round(h * .011)) };
+  const my = (y0 + y1) >> 1; let t = 0;
+  while (t < 60) { const i = (my * w + x0 + t) * 4; if (!isRed(d[i], d[i + 1], d[i + 2])) break; t++; }
+  return { x0, x1, y0, y1, t: Math.max(t, 3) };
+}
+function syncSliders() {
+  const w = cv.width, h = cv.height;
+  $("bx0").value = box.x0 / w * 100; $("bx1").value = box.x1 / w * 100;
+  $("by0").value = box.y0 / h * 100; $("by1").value = box.y1 / h * 100; $("bt").value = box.t;
+}
+["bx0","bx1","by0","by1","bt"].forEach(id => $(id).addEventListener("input", () => {
+  const w = cv.width, h = cv.height;
+  box = { x0: $("bx0").value * w / 100, x1: $("bx1").value * w / 100, y0: $("by0").value * h / 100, y1: $("by1").value * h / 100, t: +$("bt").value };
+  draw();
+}));
+$("auto").addEventListener("click", () => { if (src) { box = detect(); syncSliders(); draw(); } });
+
+function rng(seed) { let a = 0; for (const c of String(seed)) a = (a * 31 + c.charCodeAt(0)) | 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function hsv(h, s, v) { const i = Math.floor(h * 6), f = h * 6 - i, p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s); return [[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i % 6]; }
+
+function holoTab(x, y, w, h, seed) {
+  x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
+  const r = rng("tab" + seed), img = ctx.getImageData(x, y, w, h), d = img.data;
+  for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
+    const v = .93 - .30 * j / h, hue = ((i + j * .8) / (w * .55)) % 1;
+    let c = hsv(hue, .28, 1).map(t => v * 255 * (.72 + .28 * t));
+    const n = r();
+    if (n > .965) c = [255, 255, 255];
+    else if (n > .93) c = hsv(r(), .5, 1).map(t => t * 255);
+    else if (n < .05) c = c.map(t => t * .8);
+    const k = (j * w + i) * 4; d[k] = c[0]; d[k + 1] = c[1]; d[k + 2] = c[2]; d[k + 3] = 255;
+  }
+  ctx.putImageData(img, x, y);
+  ctx.fillStyle = "#fcfcff"; ctx.fillRect(x, y, w, 1);
+  ctx.strokeStyle = "#96989e"; ctx.lineWidth = 1; ctx.strokeRect(x + .5, y + .5, w - 1, h - 1);
+}
+
+function fields() {
+  const g = $("grade").value;
+  return {
+    lines: [$("l1").value, $("l2").value, $("l3").value].map(s => s.trim().toUpperCase()).filter(Boolean),
+    num: $("num").value.trim().toUpperCase(), grade: String(+g), gradeName: gradeName(g),
+    cert: $("cert").value.replace(/\D/g, ""), status: document.querySelector("[name=st]:checked").value
+  };
+}
+
+function draw() {
+  if (!src) return;
+  const f = fields();
+  ctx.drawImage(src, 0, 0, cv.width, cv.height);
+  const { x0, y0, x1, y1, t } = box;
+  ctx.fillStyle = "#111"; ctx.fillRect(x0 - 4, y0 - 4, x1 - x0 + 8, y1 - y0 + 8);
+  const ix0 = x0 + t, iy0 = y0 + t, ix1 = x1 - t, iy1 = y1 - t, iw = ix1 - ix0, ih = iy1 - iy0;
+  ctx.fillStyle = "#c9a13b"; ctx.fillRect(ix0 - 2, iy0 - 2, iw + 4, ih + 4);
+  ctx.fillStyle = "#fff"; ctx.fillRect(ix0, iy0, iw, ih);
+  const left = f.lines.length ? f.lines : ["YEAR AND SET", "CARD NAME"];
+  let size = Math.max(8, Math.floor(ih * .175));
+  const font = (s, b) => `${b ? "bold " : ""}${s}px Arial, Helvetica, sans-serif`;
+  ctx.font = font(size);
+  while (Math.max(...left.map(s => ctx.measureText(s).width)) > iw * .68 && size > 7) { size--; ctx.font = font(size); }
+  const pad = iw * .03, lh = Math.floor(size * 1.12), ty = iy0 + ih * .06;
+  ctx.fillStyle = "#1d1d1f"; ctx.textBaseline = "top";
+  ctx.textAlign = "left"; left.forEach((s, i) => ctx.fillText(s, ix0 + pad, ty + i * lh));
+  ctx.textAlign = "right"; [f.num || "#", f.gradeName, f.grade, f.cert || "CERT"].forEach((s, i) => ctx.fillText(s, ix1 - pad, ty + i * lh));
+  // barcode
+  const r = rng(f.cert || "0"); let bx = ix0 + pad; const by = ty + 3 * lh + size * .15, bw = iw * .38, bh = size * .85;
+  ctx.fillStyle = "#111";
+  while (bx < ix0 + pad + bw) { const w = [1,1,2,2,3][Math.floor(r() * 5)]; ctx.fillRect(Math.round(bx), by, w, bh); bx += w + [1,2,2,3][Math.floor(r() * 4)]; }
+  // holographic UCG tab on the bottom frame
+  ctx.font = font(Math.floor(size * 1.15), true);
+  const tw = ctx.measureText("UCG").width + size * 1.2, th = Math.floor(size * 1.55), cx = (x0 + x1) / 2;
+  const tx0 = cx - tw / 2, ty0 = y1 + 1 - th;
+  holoTab(tx0, ty0, tw, th, f.cert || "0");
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.lineWidth = Math.max(1, size / 14) * 2; ctx.strokeStyle = "#f5f6fa"; ctx.lineJoin = "round";
+  ctx.strokeText("UCG", cx, ty0 + th / 2 + 1);
+  ctx.fillStyle = "#24252a"; ctx.fillText("UCG", cx, ty0 + th / 2 + 1);
+  ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+}
+["l1","l2","l3","num","grade","cert"].forEach(id => $(id).addEventListener("input", draw));
+
+function loadFile(file) {
+  if (!file || !file.type.startsWith("image/")) { $("saveMsg").className = "msg err"; $("saveMsg").textContent = "Pick an image file (JPG, PNG or WebP)."; return; }
+  const img = new Image();
+  img.onload = () => {
+    const k = Math.min(1, 1000 / img.width);
+    cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+    src = img; box = detect(); syncSliders(); draw();
+    cv.hidden = false; $("empty").hidden = true; $("save").disabled = false;
+    $("saveMsg").textContent = "";
+    URL.revokeObjectURL(img.src);
+  };
+  img.src = URL.createObjectURL(file);
+}
+$("drop").addEventListener("click", () => $("file").click());
+$("drop").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("file").click(); } });
+$("file").addEventListener("change", e => loadFile(e.target.files[0]));
+$("drop").addEventListener("dragover", e => { e.preventDefault(); $("drop").classList.add("over"); });
+$("drop").addEventListener("dragleave", () => $("drop").classList.remove("over"));
+$("drop").addEventListener("drop", e => { e.preventDefault(); $("drop").classList.remove("over"); loadFile(e.dataTransfer.files[0]); });
+
+function exportJpeg(maxW, limit) {
+  let w = Math.min(maxW, cv.width), q = .86, out;
+  for (;;) {
+    const c = document.createElement("canvas"); c.width = w; c.height = Math.round(cv.height * w / cv.width);
+    c.getContext("2d").drawImage(cv, 0, 0, c.width, c.height);
+    out = c.toDataURL("image/jpeg", q);
+    if (out.length < limit || w < 300) return out;
+    if (q > .7) q -= .08; else w = Math.round(w * .85);
+  }
+}
+
+// ---------- Firebase
+if (!firebaseConfig) { $("setupMsg").hidden = false; throw new Error("Firebase not configured"); }
+const { initializeApp } = await import(`${FIREBASE_SDK}/firebase-app.js`);
+const A = await import(`${FIREBASE_SDK}/firebase-auth.js`);
+const F = await import(`${FIREBASE_SDK}/firebase-firestore.js`);
+const app = initializeApp(firebaseConfig);
+const auth = A.getAuth(app), db = F.getFirestore(app);
+
+const say = (id, text, kind) => { const m = $(id); m.textContent = text; m.className = "msg" + (kind ? " " + kind : ""); };
+const friendly = e => ({
+  "auth/invalid-credential": "Wrong email or password.", "auth/wrong-password": "Wrong email or password.",
+  "auth/user-not-found": "No account with that email yet. Use “Create the admin account”.",
+  "auth/email-already-in-use": "That account already exists. Sign in instead.",
+  "auth/weak-password": "Use a password with at least 8 characters.",
+  "auth/too-many-requests": "Too many tries. Wait a few minutes and try again.",
+  "auth/missing-password": "Enter your password.", "auth/invalid-email": "Enter a valid email.",
+  "permission-denied": "The database refused this. Make sure you're signed in as the verified admin."
+}[e.code] || e.message);
+
+$("signIn").addEventListener("click", async () => {
+  say("authMsg", "Signing in…");
+  try { await A.signInWithEmailAndPassword(auth, $("email").value.trim(), $("pw").value); say("authMsg", ""); }
+  catch (e) { say("authMsg", friendly(e), "err"); }
+});
+$("pw").addEventListener("keydown", e => { if (e.key === "Enter") $("signIn").click(); });
+$("create").addEventListener("click", async () => {
+  const email = $("email").value.trim().toLowerCase();
+  if (email !== ADMIN_EMAIL) { say("authMsg", `Only ${ADMIN_EMAIL} can be the admin.`, "err"); return; }
+  if ($("pw").value.length < 8) { say("authMsg", "Type a password of at least 8 characters first, then press this again.", "err"); return; }
+  try { const c = await A.createUserWithEmailAndPassword(auth, email, $("pw").value); await A.sendEmailVerification(c.user); }
+  catch (e) { say("authMsg", friendly(e), "err"); }
+});
+$("reset").addEventListener("click", async () => {
+  try { await A.sendPasswordResetEmail(auth, $("email").value.trim()); say("authMsg", "Password reset email sent.", "ok"); }
+  catch (e) { say("authMsg", friendly(e), "err"); }
+});
+$("verified").addEventListener("click", async () => {
+  await auth.currentUser.reload(); await auth.currentUser.getIdToken(true);
+  if (auth.currentUser.emailVerified) render(auth.currentUser); else say("verifyMsg", "Not verified yet. Open the link in the email first.", "err");
+});
+$("resend").addEventListener("click", async () => {
+  try { await A.sendEmailVerification(auth.currentUser); say("verifyMsg", "Sent. Check your inbox and spam folder.", "ok"); }
+  catch (e) { say("verifyMsg", friendly(e), "err"); }
+});
+$("signOut").addEventListener("click", () => A.signOut(auth));
+
+function render(user) {
+  const isAdmin = user && user.email && user.email.toLowerCase() === ADMIN_EMAIL;
+  $("authBox").hidden = !!user; $("signOut").hidden = !user; $("who").textContent = user ? user.email : "";
+  $("denied").hidden = !user || isAdmin;
+  $("verifyBox").hidden = !(isAdmin && !user.emailVerified);
+  $("dash").hidden = !(isAdmin && user.emailVerified);
+  if (isAdmin && !user.emailVerified) $("vEmail").textContent = user.email;
+  if (isAdmin && user.emailVerified) loadList();
+}
+A.onAuthStateChanged(auth, render);
+
+// ---------- certs list
+let known = new Set();
+async function loadList() {
+  const builtin = await fetch("mockups/cards.json").then(r => r.ok ? r.json() : []).catch(() => []);
+  const snap = await F.getDocs(F.collection(db, "certs"));
+  const mine = snap.docs.map(d => d.data());
+  known = new Set([...builtin, ...mine].map(c => String(c.cert)));
+  const next = Math.max(90000100, ...[...known].map(Number)) + 1;
+  if (!$("cert").value || known.has($("cert").value)) { $("cert").value = next; draw(); }
+  const rows = [...mine.map(c => ({ ...c, db: true })), ...builtin.map(c => ({ ...c, db: false }))].sort((a, b) => b.cert - a.cert);
+  $("rows").innerHTML = rows.map(c => `<tr>
+    <td><img src="${esc(c.thumb || c.img)}" alt=""></td>
+    <td><a href="./#cert${esc(c.cert)}" target="_blank" rel="noopener">${esc(c.cert)}</a></td>
+    <td>${esc((c.lines || []).join(" · "))} ${esc(c.num)}</td>
+    <td>${esc(c.gradeName)} ${esc(c.grade)}</td>
+    <td>${c.db ? (c.status === "graded" ? '<span class="pill g">Graded</span>' : '<span class="pill p">Preview</span>') : '<span class="pill b">Built-in</span>'}</td>
+    <td>${c.db ? `<button class="btn small danger" data-del="${esc(c.cert)}">Delete</button>` : ""}</td></tr>`).join("") || '<tr><td colspan="6">No certs yet.</td></tr>';
+}
+$("rows").addEventListener("click", async e => {
+  const b = e.target.closest("[data-del]"); if (!b) return;
+  if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "Click again to delete"; setTimeout(() => { if (b.isConnected) { b.dataset.armed = ""; b.textContent = "Delete"; } }, 4000); return; }
+  b.disabled = true; b.textContent = "Deleting…";
+  try {
+    await F.deleteDoc(F.doc(db, "certs", b.dataset.del)); await F.deleteDoc(F.doc(db, "images", b.dataset.del));
+    await loadList();
+  } catch (err) { b.textContent = friendly(err); }
+});
+
+// ---------- publish
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = fields();
+  if (!src) return say("saveMsg", "Upload a photo first.", "err");
+  if (f.lines.length < 2) return say("saveMsg", "Fill in line 1 and line 2.", "err");
+  if (!/^\d{6,10}$/.test(f.cert)) return say("saveMsg", "The cert number should be 6 to 10 digits.", "err");
+  if (known.has(f.cert)) return say("saveMsg", `Cert ${f.cert} already exists. Use a different number.`, "err");
+  draw();
+  $("save").disabled = true; say("saveMsg", "Publishing…");
+  try {
+    const full = exportJpeg(900, 900000), thumb = exportJpeg(360, 120000);
+    await F.setDoc(F.doc(db, "images", f.cert), { img: full });
+    await F.setDoc(F.doc(db, "certs", f.cert), { ...f, thumb, created: F.serverTimestamp() });
+    say("saveMsg", `Published cert ${f.cert}.`, "ok");
+    ["l1","l2","l3","num"].forEach(id => $(id).value = "");
+    src = null; cv.hidden = true; $("empty").hidden = false; $("file").value = "";
+    $("cert").value = ""; await loadList();
+  } catch (err) { say("saveMsg", friendly(err), "err"); }
+  finally { $("save").disabled = !src; }
+});
+</script>
+</body>
+</html>

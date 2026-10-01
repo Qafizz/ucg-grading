@@ -464,7 +464,7 @@ function showHome(){$("top").hidden=false;$("certPage").hidden=true;document.tit
 function certPage(v){
   const m=mock[v], d=certs[v];
   let lines,num,gname,grade,visual;
-  if(m){lines=m.lines;num=m.num;gname=m.gradeName;grade=m.grade;visual=`<img src="${m.img}" alt="UCG slab, cert ${v}">`}
+  if(m){lines=m.lines;num=m.num;gname=m.gradeName;grade=m.grade;visual=`<img id="cpImg" src="${m.img||m.thumb}" alt="UCG slab, cert ${v}">`}
   else{const s=d.slab;lines=[s[0],s[1],s[2]];num=s[3];gname=s[4];grade=s[5];visual=slabHTML(s)}
   const [year,...brand]=lines[0].split(" ");
   const subject=lines[1], variety=lines[2]||"—";
@@ -487,7 +487,7 @@ function certPage(v){
           <tr><th>Variety</th><td>${esc(variety)}</td></tr>
           <tr><th>Grade</th><td>${esc(gname)} ${esc(grade)}</td></tr>
         </table></div>
-        ${m?`<p class="cp-note">Label preview · UCG grading pending</p>`:""}
+        ${m&&m.status!=="graded"?`<p class="cp-note">Label preview · UCG grading pending</p>`:""}
         <div class="qr-big"><div class="qr">${qrSVG(url)}</div><p>Scan to open this page on a phone.<br><code>${esc(url)}</code></p></div>
         <div class="cp-actions">
           <button class="btn" type="button" id="cpCopy">Copy link</button>
@@ -498,6 +498,7 @@ function certPage(v){
   $("cpCopy").addEventListener("click",()=>{
     navigator.clipboard.writeText(url).then(()=>$("cpCopy").textContent="Link copied").catch(()=>$("cpCopy").textContent="Copy failed, use the link above");
   });
+  if(m&&!m.img&&window.ucgFullImage)window.ucgFullImage(v).then(src=>{const el=$("cpImg");if(src&&el)el.src=src}).catch(()=>{});
   $("top").hidden=true;$("certPage").hidden=false;
   document.title=`UCG Cert #${v} · ${subject}`;
   scrollTo(0,0);
@@ -508,8 +509,8 @@ function galleryPage(){
     <a class="cp-back" href="#top">← Home</a>
     <div class="cp-eyebrow">Gallery</div>
     <h1>Every card in a UCG slab</h1>
-    <p class="sub" style="text-align:left;margin:0">${cardList.length} cards. Label previews, grading pending. Tap one to open its page.</p>
-    <div class="coll-grid">${cardList.map(c=>`<a href="#cert${c.cert}"><img src="${c.img}" alt="${esc(c.lines[1])}" loading="lazy"><b>${esc(c.lines[1])}</b><span>${esc(c.gradeName)} ${esc(c.grade)} · #${c.cert}</span></a>`).join("")||'<span>Cards are loading…</span>'}</div>`;
+    <p class="sub" style="text-align:left;margin:0">${cardList.length} cards. Tap one to open its cert page.</p>
+    <div class="coll-grid">${cardList.map(c=>`<a href="#cert${c.cert}"><img src="${c.thumb||c.img}" alt="${esc(c.lines[1])}" loading="lazy"><b>${esc(c.lines[1])}</b><span>${esc(c.gradeName)} ${esc(c.grade)} · #${c.cert}</span></a>`).join("")||'<span>Cards are loading…</span>'}</div>`;
   $("top").hidden=true;$("certPage").hidden=false;
   document.title="Gallery · UCG";
   scrollTo(0,0);
@@ -525,14 +526,17 @@ function route(){
   if(el&&wasHidden)el.scrollIntoView();
 }
 addEventListener("hashchange",route);route();
-fetch("mockups/cards.json").then(r=>r.ok?r.json():[]).catch(()=>[]).then(list=>{
-  mockDone=true;
-  if(!list.length){route();return}
-  list.forEach(c=>mock[c.cert]=c);
-  cardList=list;
-  $("track").innerHTML=list.map(c=>`<a class="mq" href="#cert${c.cert}"><img src="${c.img}" alt="${esc(c.lines[1])}, UCG ${esc(c.gradeName)} ${esc(c.grade)}"></a>`).join("").repeat(2);
+let pending=2;  // cards.json + database
+function ucgAddCards(list){
+  (list||[]).forEach(c=>mock[c.cert]=c);
+  cardList=Object.values(mock).sort((x,y)=>y.cert-x.cert);
+  if(cardList.length)$("track").innerHTML=cardList.map(c=>`<a class="mq" href="#cert${c.cert}"><img src="${c.thumb||c.img}" alt="${esc(c.lines[1])}, UCG ${esc(c.gradeName)} ${esc(c.grade)}"></a>`).join("").repeat(2);
+  if(--pending<=0)mockDone=true;
   route();
-}).catch(()=>{});
+}
+window.ucgAddCards=ucgAddCards;
+setTimeout(()=>{if(!mockDone){pending=0;mockDone=true;route()}},6000);
+fetch("mockups/cards.json").then(r=>r.ok?r.json():[]).catch(()=>[]).then(ucgAddCards);
 $("certForm").addEventListener("submit",e=>{e.preventDefault();lookup($("cert").value)});
 $("navCert").addEventListener("submit",e=>{e.preventDefault();lookup($("navCertIn").value);$("navCertIn").value=""});
 
@@ -603,5 +607,6 @@ function renderPop(){
 }
 $("popQ").addEventListener("input",renderPop);renderPop();
 </script>
+<script type="module" src="ucg-db.js"></script>
 
 </body></html>
