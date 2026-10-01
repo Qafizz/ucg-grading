@@ -106,7 +106,7 @@ td img{width:46px;border-radius:5px;display:block}
 
   <!-- dashboard -->
   <section id="dash" hidden>
-    <div class="row" style="justify-content:space-between"><h1>Add a card</h1><a class="btn small light" href="./#gallery" target="_blank" rel="noopener">View gallery</a></div>
+    <div class="row" style="justify-content:space-between"><h1>Add a card</h1><div class="row"><a class="btn small light" href="labels.html" target="_blank" rel="noopener">Print labels</a><a class="btn small light" href="./#gallery" target="_blank" rel="noopener">View gallery</a></div></div>
     <div class="editor">
       <form class="panel fields" id="form" autocomplete="off">
         <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload slab photo"><b>Upload a slab photo</b><br>Click or drop an image. Front of the slab, label at the top.</div>
@@ -357,7 +357,7 @@ async function loadList() {
     <td>${esc((c.lines || []).join(" · "))} ${esc(c.num)}</td>
     <td>${esc(c.gradeName)} ${esc(c.grade)}</td>
     <td>${c.db ? (c.status === "graded" ? '<span class="pill g">Graded</span>' : '<span class="pill p">Preview</span>') : '<span class="pill b">Built-in</span>'}</td>
-    <td>${c.db ? `<button class="btn small danger" data-del="${esc(c.cert)}">Delete</button>` : ""}</td></tr>`).join("") || '<tr><td colspan="6">No certs yet.</td></tr>';
+    <td><div class="row"><a class="btn small light" target="_blank" rel="noopener" href="labels.html?${new URLSearchParams({cert:c.cert,l1:(c.lines||[])[0]||"",l2:(c.lines||[])[1]||"",l3:(c.lines||[])[2]||"",num:c.num||"",grade:c.grade||"10"})}">Label</a>${c.db ? `<button class="btn small danger" data-del="${esc(c.cert)}">Delete</button>` : ""}</div></td></tr>`).join("") || '<tr><td colspan="6">No certs yet.</td></tr>';
 }
 $("rows").addEventListener("click", async e => {
   const b = e.target.closest("[data-del]"); if (!b) return;
