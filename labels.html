@@ -63,9 +63,12 @@ h2{font:600 1.15rem "Outfit",sans-serif;margin:0 0 12px}
 .lab2 .bc{position:absolute;left:1.5mm;bottom:.75mm;display:flex;height:1.6mm;width:19mm;overflow:hidden}
 .lab2 .bc i{background:#111;display:block;flex:none}
 .lab2 .ct{position:absolute;right:15.6mm;bottom:.55mm;font-size:1.75mm;letter-spacing:.05mm;color:#1d1d1f}
-.lab2 .gb{position:absolute;right:.8mm;top:.8mm;bottom:.8mm;width:13.4mm;background:#111;border:.25mm solid var(--gold);border-radius:.8mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2mm}
-.lab2 .gb small{font:700 1.3mm Arial,sans-serif;letter-spacing:.16mm;color:var(--gold-lt);text-transform:uppercase}
-.lab2 .gb strong{font:800 6.4mm/1 "Outfit",Arial,sans-serif;background:linear-gradient(180deg,#fbe6a2,#d8ad45 55%,#a07b22);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lab2 .gb{position:absolute;right:.8mm;top:.8mm;bottom:.8mm;width:13.4mm;background:#fff;border:.3mm solid #111;border-radius:.8mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2mm}
+.lab2 .gb small{font:700 1.3mm Arial,sans-serif;letter-spacing:.16mm;color:#55565c;text-transform:uppercase}
+.lab2 .gb strong{font:800 6.4mm/1 "Outfit",Arial,sans-serif;color:#111}
+.lab2 .gb.black{background:#111;border-color:var(--gold)}
+.lab2 .gb.black small{color:var(--gold-lt)}
+.lab2 .gb.black strong{background:linear-gradient(180deg,#fbe6a2,#d8ad45 55%,#a07b22);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .lab2 .tab{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:10mm;height:3.1mm;display:grid;place-items:center;
   font:700 2.25mm Arial,Helvetica,sans-serif;letter-spacing:.1mm;color:#24252a;-webkit-text-stroke:.07mm #f5f6fa;border:.12mm solid #96989e;border-bottom:0;
   background:
@@ -126,7 +129,9 @@ h2{font:600 1.15rem "Outfit",sans-serif;margin:0 0 12px}
 <script>
 const $=id=>document.getElementById(id);
 const NAMES={10:"GEM MT",9:"MINT",8:"NM-MT",7:"NM",6:"EX-MT",5:"EX",4:"VG-EX",3:"VG",2:"GOOD",1:"PR"};
-const gName=g=>Number.isInteger(+g)?NAMES[+g]:NAMES[Math.floor(+g)]+"+";
+const gName=g=>g==="10p"?"PERFECT":Number.isInteger(+g)?NAMES[+g]:NAMES[Math.floor(+g)]+"+";
+const gNum=g=>g==="10p"?"10":String(+g);
+$("grade").insertAdjacentHTML("beforeend",`<option value="10p">10 · Perfect (black label)</option>`);
 for(let g=10;g>=1;g-=.5)$("grade").insertAdjacentHTML("beforeend",`<option value="${g}">${g} · ${gName(g)}</option>`);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -140,13 +145,13 @@ function bars(seed){
 function label(){
   const L=[$("l1").value,$("l2").value,$("l3").value].map(s=>s.trim().toUpperCase());
   const g=$("grade").value, cert=$("cert").value.replace(/\D/g,"");
-  const R=[$("num").value.trim().toUpperCase(),gName(g),String(+g),cert];
+  const R=[$("num").value.trim().toUpperCase(),gName(g),gNum(g),cert];
   return `<div class="lab"><div class="face">
     <div class="l">${L.map(esc).join("<br>")}<div class="bc">${bars(cert)}</div></div>
     <div class="r">${R.map(esc).join("<br>")}</div></div><div class="tab">UCG</div></div>`;
 }
 const LONG={10:"Gem Mint",9:"Mint",8:"NM-Mint",7:"Near Mint",6:"EX-Mint",5:"Excellent",4:"VG-EX",3:"Very Good",2:"Good",1:"Poor"};
-const gLong=g=>Number.isInteger(+g)?LONG[+g]:LONG[Math.floor(+g)]+"+";
+const gLong=g=>g==="10p"?"Perfect":Number.isInteger(+g)?LONG[+g]:LONG[Math.floor(+g)]+"+";
 function premium(){
   const [l1,l2,l3]=[$("l1").value,$("l2").value,$("l3").value].map(s=>s.trim());
   const num=$("num").value.trim(), g=$("grade").value, cert=$("cert").value.replace(/\D/g,"");
@@ -154,7 +159,7 @@ function premium(){
   return `<div class="lab2"><div class="hd"><b>UCG</b><span>UNIVERSAL CARD GRADING</span></div>
     <div class="bd"><div class="tx"><b>${esc(l2)}</b><br>${esc(l1)}<br>${esc(third)}</div>
       <div class="bc">${bars(cert)}</div><div class="ct">${esc(cert)}</div>
-      <div class="gb"><small>${esc(gLong(g))}</small><strong>${esc(String(+g))}</strong></div></div>
+      <div class="gb${g==="10p"?" black":""}"><small>${esc(gLong(g))}</small><strong>${esc(gNum(g))}</strong></div></div>
     <div class="tab">UCG</div></div>`;
 }
 const make=()=>document.querySelector("[name=sty]:checked").value==="premium"?premium():label();
@@ -168,6 +173,7 @@ $("print").addEventListener("click",()=>{render();window.print()});
 const q=new URLSearchParams(location.search);  // labels.html?cert=..&l1=..  prefill from admin
 ["l1","l2","l3","num","cert"].forEach(k=>{if(q.get(k))$(k).value=q.get(k)});
 if(q.get("grade"))$("grade").value=q.get("grade");
+if(!$("grade").value)$("grade").value="10";
 render();
 </script>
 </body>
