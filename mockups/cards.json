@@ -1,0 +1,169 @@
+[
+ {
+  "cert": "90000101",
+  "img": "mockups/ucg-90000101.jpg",
+  "lines": [
+   "2020 POKEMON SWSH",
+   "F.A/CHARIZARD VMAX",
+   "DARKNESS ABLAZE"
+  ],
+  "num": "#020",
+  "gradeName": "MINT",
+  "grade": "9"
+ },
+ {
+  "cert": "90000102",
+  "img": "mockups/ucg-90000102.jpg",
+  "lines": [
+   "2019 POKEMON S & M",
+   "F.A./CHARIZARD GX",
+   "HIDDEN FATES"
+  ],
+  "num": "#SV49",
+  "gradeName": "MINT",
+  "grade": "9"
+ },
+ {
+  "cert": "90000103",
+  "img": "mockups/ucg-90000103.jpg",
+  "lines": [
+   "2016 POKEMON XY",
+   "CHARIZARD-REV.FOIL",
+   "EVOLUTIONS"
+  ],
+  "num": "#11",
+  "gradeName": "MINT",
+  "grade": "9"
+ },
+ {
+  "cert": "90000104",
+  "img": "mockups/ucg-90000104.jpg",
+  "lines": [
+   "2020 POKEMON SWSH BSP",
+   "SPCL.DELIVERY PIKACHU",
+   "POKEMON CENTER CANADA"
+  ],
+  "num": "#074",
+  "gradeName": "MINT",
+  "grade": "9"
+ },
+ {
+  "cert": "90000105",
+  "img": "mockups/ucg-90000105.jpg",
+  "lines": [
+   "2020 POKEMON JPN.SWSH",
+   "FA/SKYLA",
+   "SHINY STAR V"
+  ],
+  "num": "#195",
+  "gradeName": "GEM MT",
+  "grade": "10"
+ },
+ {
+  "cert": "90000106",
+  "img": "mockups/ucg-90000106.jpg",
+  "lines": [
+   "2021 POKEMON SWSH BSP",
+   "SPCL.DELIVERY BIDOOF",
+   "BIDOOF DAY-HOLO"
+  ],
+  "num": "#177",
+  "gradeName": "GEM MT",
+  "grade": "10"
+ },
+ {
+  "cert": "90000107",
+  "img": "mockups/ucg-90000107.jpg",
+  "lines": [
+   "2000 POKEMON ROCKET",
+   "DARK CHARIZARD-HOLO"
+  ],
+  "num": "#4",
+  "gradeName": "NM-MT",
+  "grade": "8"
+ },
+ {
+  "cert": "90000108",
+  "img": "mockups/ucg-90000108.jpg",
+  "lines": [
+   "2020 POKEMON SWSH",
+   "FA/CHARIZARD V",
+   "CHAMPION'S PATH-SECRET"
+  ],
+  "num": "#079",
+  "gradeName": "MINT",
+  "grade": "9"
+ },
+ {
+  "cert": "90000109",
+  "img": "mockups/ucg-90000109.jpg",
+  "lines": [
+   "2020 POKEMON SWSH BSP",
+   "CHARIZARD-HOLO",
+   "PRERELEASE"
+  ],
+  "num": "#066",
+  "gradeName": "MINT",
+  "grade": "9"
+ },
+ {
+  "cert": "90000110",
+  "img": "mockups/ucg-90000110.jpg",
+  "lines": [
+   "2020 POKEMON SWSH",
+   "CHARIZARD-HOLO",
+   "VIVID VOLTAGE-CRACKED ICE"
+  ],
+  "num": "#025",
+  "gradeName": "MINT",
+  "grade": "9"
+ },
+ {
+  "cert": "90000111",
+  "img": "mockups/ucg-90000111.jpg",
+  "lines": [
+   "2020 POKEMON SWSH BSP",
+   "CHARIZARD V",
+   "CHMPN.PATH ELITE TRNR.BOX"
+  ],
+  "num": "#050",
+  "gradeName": "GEM MT",
+  "grade": "10"
+ },
+ {
+  "cert": "90000112",
+  "img": "mockups/ucg-90000112.jpg",
+  "lines": [
+   "2020 POKEMON SWSH",
+   "FA/PIKACHU VMAX",
+   "VIVID VOLTAGE"
+  ],
+  "num": "#044",
+  "gradeName": "GEM MT",
+  "grade": "10"
+ },
+ {
+  "cert": "90000113",
+  "img": "mockups/ucg-90000113.jpg",
+  "lines": [
+   "2020 POKEMON SWSH BSP",
+   "DONPHAN-HOLO",
+   "PRERELEASE"
+  ],
+  "num": "#067",
+  "gradeName": "GEM MT",
+  "grade": "10"
+ },
+ {
+  "cert": "90000114",
+  "img": "mockups/ucg-90000114.jpg",
+  "lines": [
+   "2020 POKEMON SWSH BSP",
+   "SNORLAX-HOLO",
+   "PRERELEASE"
+  ],
+  "num": "#068",
+  "gradeName": "GEM MT",
+  "grade": "10"
+ }
+]
